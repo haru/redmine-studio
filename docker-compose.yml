@@ -1,7 +1,7 @@
 version: '3'
 services:
   redmine-studio:
-    image: haru/redmine-studio:${REDMINE_VER:-5.0.5}
+    image: haru/redmine-studio:1.0-${REDMINE_VER:-5.0.5}
     build:
       context: build
       args:
