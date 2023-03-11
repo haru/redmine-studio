@@ -1,10 +1,13 @@
 version: '3'
 services:
   redmine-studio:
-    image: haru/redmine-studio:1.0
+    image: haru/redmine-studio:${REDMINE_VER:-5.0.5}
     build:
       context: build
       args:
-        REDMINE_VER: "5.0.5"
+        REDMINE_VER: ${REDMINE_VER}
     ports:
       - 3000:3000
+      - 4000:4000
+    volumes:
+      - ./plugins:/home/workspace/redmine/plugins
