@@ -59,6 +59,7 @@ RUN \
         gitpod.gitpod-theme \
         rebornix.Ruby \
         andrewmcodes.rails-extension-power-pack \
+        donjayamanne.git-extension-pack \
         # From filesystem, .vsix that we downloaded (using bash wildcard '*')
         "${tdir}"/* \
     )\
