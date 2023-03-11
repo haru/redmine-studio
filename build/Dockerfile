@@ -35,6 +35,7 @@ RUN mkdir db/data
 RUN bundle exec rake db:migrate
 RUN mkdir -p .vscode
 COPY launch.json .vscode/
+RUN sudo chown openvscode-server .vscode/launch.json
 
 ENV OPENVSCODE_SERVER_ROOT="/home/.openvscode-server"
 ENV OPENVSCODE="${OPENVSCODE_SERVER_ROOT}/bin/openvscode-server"
