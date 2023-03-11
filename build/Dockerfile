@@ -4,7 +4,7 @@ ARG REDMINE_VER
 RUN echo aaa
 USER root
 RUN apt-get update && apt-get upgrade -y && apt-get clean
-RUN apt-get install -y ruby ruby-full ruby-dev sqlite3 libsqlite3-dev build-essential && apt-get clean
+RUN apt-get install -y ruby ruby-full ruby-dev sqlite3 libsqlite3-dev build-essential ssh && apt-get clean
 RUN gem install bundler solargraph
 RUN curl -o /tmp/redmine.tgz https://www.redmine.org/releases/redmine-${REDMINE_VER}.tar.gz
 WORKDIR /home/workspace

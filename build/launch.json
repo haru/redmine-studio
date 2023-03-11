@@ -17,6 +17,19 @@
                 "-p",
                 "4000"
             ]
+        },
+        {
+            "name": "Redmine plugins test",
+            "type": "Ruby",
+            "request": "launch",
+            "program": "${workspaceRoot}/bin/rake",
+            "useBundler": true,
+            "args": [
+                "redmine:plugins:test"
+            ],
+            "env": {
+                "RAILS_ENV": "test"
+            }
         }
     ]
 }
