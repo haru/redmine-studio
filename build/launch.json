@@ -13,10 +13,21 @@
             "args": [
                 "server",
                 "-b",
-                "0.0.0.0",
-                "-p",
-                "4000"
+                "0.0.0.0"
             ]
+        },
+        {
+            "name": "Redmine plugins test",
+            "type": "Ruby",
+            "request": "launch",
+            "program": "${workspaceRoot}/bin/rake",
+            "useBundler": true,
+            "args": [
+                "redmine:plugins:test"
+            ],
+            "env": {
+                "RAILS_ENV": "test"
+            }
         }
     ]
 }

@@ -1,29 +1,45 @@
 FROM gitpod/openvscode-server:latest
 LABEL maintainer="haru.ii.a9i1e@gmail.com"
 ARG REDMINE_VER
-RUN echo aaa
+RUN echo REDMINE_VER=${REDMINE_VER}
+
+ARG RUBY_VER
+RUN echo RUBY_VER=${RUBY_VER}
+
 USER root
 RUN apt-get update && apt-get upgrade -y && apt-get clean
-RUN apt-get install -y ruby ruby-full ruby-dev sqlite3 libsqlite3-dev build-essential && apt-get clean
-RUN gem install bundler solargraph
-RUN curl -o /tmp/redmine.tgz https://www.redmine.org/releases/redmine-${REDMINE_VER}.tar.gz
-WORKDIR /home/workspace
+RUN apt-get install -y sqlite3 libsqlite3-dev build-essential ssh  libssl-dev zlib1g-dev && apt-get clean
+
+RUN git clone --depth=1 https://github.com/rbenv/ruby-build && PREFIX=/usr/local ./ruby-build/install.sh && rm -rf ruby-build
+RUN ruby-build ${RUBY_VER:-3.0.0} /usr/local
+RUN gem install bundler solargraph ruby-debug-ide
+RUN mkdir -p /home/workspace/.local/share
+RUN chown -R openvscode-server /home/workspace/.local/share
 USER openvscode-server
+
+RUN curl -o /tmp/redmine.tgz https://www.redmine.org/releases/redmine-${REDMINE_VER:-5.0.5}.tar.gz
+WORKDIR /home/workspace
+
 RUN tar xvfz /tmp/redmine.tgz
 RUN mv redmine-* redmine
 COPY database.yml redmine/config/
 ENV RAILS_ENV development
 WORKDIR /home/workspace/redmine
+
 RUN echo "gem 'ruby-debug-ide'" >> Gemfile
 RUN echo "gem 'debase'" >> Gemfile
 RUN echo "gem 'rufo'" >> Gemfile
-RUN bundle install --path vendor/bundle
+RUN bundle config set --local path 'vendor/bundle'
+RUN bundle install
+RUN mkdir db/data
 RUN bundle exec rake db:migrate
 RUN mkdir -p .vscode
 COPY launch.json .vscode/
+RUN sudo chown openvscode-server .vscode/launch.json
 
 ENV OPENVSCODE_SERVER_ROOT="/home/.openvscode-server"
 ENV OPENVSCODE="${OPENVSCODE_SERVER_ROOT}/bin/openvscode-server"
+
 
 SHELL ["/bin/bash", "-c"]
 RUN \
@@ -43,9 +59,13 @@ RUN \
         gitpod.gitpod-theme \
         rebornix.Ruby \
         andrewmcodes.rails-extension-power-pack \
+        donjayamanne.git-extension-pack \
         # From filesystem, .vsix that we downloaded (using bash wildcard '*')
         "${tdir}"/* \
     )\
     # Install the $exts
     && for ext in "${exts[@]}"; do ${OPENVSCODE} --install-extension "${ext}"; done
 
+
+COPY entrypoint.sh /
+ENTRYPOINT [ "/bin/bash", "-x", "/entrypoint.sh" ]

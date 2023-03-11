@@ -1,13 +1,16 @@
 version: '3'
 services:
   redmine-studio:
-    image: haru/redmine-studio:${REDMINE_VER:-5.0.5}
+    image: haru/redmine-studio:1.0-${REDMINE_VER:-5.0.5}-${RUBY_VER:-3.0.0}
     build:
       context: build
       args:
-        REDMINE_VER: ${REDMINE_VER}
+        REDMINE_VER: ${REDMINE_VER:-5.0.5}
+        RUBY_VER: ${RUBY_VER:-3.0.0}
     ports:
       - 3000:3000
       - 4000:4000
     volumes:
       - ./plugins:/home/workspace/redmine/plugins
+      - ./db:/home/workspace/redmine/db/data
+      - ./files:/home/workspace/redmine/files
