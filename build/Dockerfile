@@ -18,12 +18,14 @@ RUN echo "gem 'ruby-debug-ide'" >> Gemfile
 RUN echo "gem 'debase'" >> Gemfile
 RUN echo "gem 'rufo'" >> Gemfile
 RUN bundle install --path vendor/bundle
+RUN mkdir db/data
 RUN bundle exec rake db:migrate
 RUN mkdir -p .vscode
 COPY launch.json .vscode/
 
 ENV OPENVSCODE_SERVER_ROOT="/home/.openvscode-server"
 ENV OPENVSCODE="${OPENVSCODE_SERVER_ROOT}/bin/openvscode-server"
+
 
 SHELL ["/bin/bash", "-c"]
 RUN \
@@ -49,3 +51,6 @@ RUN \
     # Install the $exts
     && for ext in "${exts[@]}"; do ${OPENVSCODE} --install-extension "${ext}"; done
 
+
+COPY entrypoint.sh /
+ENTRYPOINT [ "/bin/bash", "-x", "/entrypoint.sh" ]

@@ -11,3 +11,5 @@ services:
       - 4000:4000
     volumes:
       - ./plugins:/home/workspace/redmine/plugins
+      - ./db:/home/workspace/redmine/db/data
+      - ./files:/home/workspace/redmine/files
