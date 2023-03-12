@@ -7,6 +7,9 @@ services:
       args:
         REDMINE_VER: ${REDMINE_VER:-5.0.5}
         RUBY_VER: ${RUBY_VER:-3.0.0}
+        http_proxy: ${http_proxy}
+        https_proxy: ${https_proxy}
+        no_proxy: ${no_proxy}
     ports:
       - 3000:3000
       - 4000:4000
@@ -14,3 +17,4 @@ services:
       - ./plugins:/home/workspace/redmine/plugins
       - ./db:/home/workspace/redmine/db/data
       - ./files:/home/workspace/redmine/files
+
