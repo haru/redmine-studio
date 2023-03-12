@@ -2,9 +2,15 @@ FROM gitpod/openvscode-server:latest
 LABEL maintainer="haru.ii.a9i1e@gmail.com"
 ARG REDMINE_VER
 RUN echo REDMINE_VER=${REDMINE_VER}
-
 ARG RUBY_VER
 RUN echo RUBY_VER=${RUBY_VER}
+
+ARG http_proxy
+ENV http_proxy ${http_proxy}
+ARG https_proxy
+ENV https_proxy ${http_proxy}
+ARG no_proxy
+ENV no_proxy ${no_proxy}
 
 USER root
 RUN apt-get update && apt-get upgrade -y && apt-get clean
